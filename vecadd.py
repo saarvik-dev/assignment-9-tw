@@ -1,8 +1,19 @@
-# Input two vectors
-a = list(map(int, input("Enter first vector elements: ").split()))
-b = list(map(int, input("Enter second vector elements: ").split()))
+n = int(input("Enter size of vectors: "))
 
-# Calculate dot product
-dot_product = sum(a[i] * b[i] for i in range(len(a)))
+a = []
+b = []
 
-print("Dot product:", dot_product)
+print("Enter first vector:")
+for i in range(n):
+    a.append(int(input("Enter element: ")))
+
+print("Enter second vector:")
+for i in range(n):
+    b.append(int(input("Enter element: ")))
+
+c = []
+
+for i in range(n):
+    c.append(a[i] + b[i])
+
+print("Resultant vector:", c)
