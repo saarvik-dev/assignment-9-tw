@@ -1,19 +1,30 @@
-n = int(input("Enter size of vectors: "))
+from concurrent.futures import ProcessPoolExecutor
+import os
 
-a = []
-b = []
+def add_elements(pair):
+    return pair[0] + pair[1]
 
-print("Enter first vector:")
-for i in range(n):
-    a.append(int(input("Enter element: ")))
+def main():
+    n = int(input("Enter size of vectors: "))
 
-print("Enter second vector:")
-for i in range(n):
-    b.append(int(input("Enter element: ")))
+    print("Enter first vector:")
+    a = [int(input("Enter element: ")) for _ in range(n)]
 
-c = []
+    print("Enter second vector:")
+    b = [int(input("Enter element: ")) for _ in range(n)]
 
-for i in range(n):
-    c.append(a[i] + b[i])
+    # Determine number of CPU cores available
+    num_workers = os.cpu_count() or 1
 
-print("Resultant vector:", c)
+    # Calculate an optimal chunk size to minimize process communication overhead
+    chunk_size = max(1, n // (num_workers * 4))
+
+    # Required guard for multiprocessing in Python
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        # zip(a, b) pairs elements together: (a[0], b[0]), (a[1], b[1]), ...
+        c = list(executor.map(add_elements, zip(a, b), chunksize=chunk_size))
+
+    print("Resultant vector:", c)
+
+if __name__ == "__main__":
+    main()
